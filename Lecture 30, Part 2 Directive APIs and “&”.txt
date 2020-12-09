@@ -1,0 +1,161 @@
+[MUSIC] Okay, so back in our code editor and
+I'm located in Lecture30 folder, which is located in
+fullstack-course5/examples folder. And this is again,
+our shopping list directive app. And the goal of task right
+now is to provide a button next to each list item and let the user
+click it and it will get removed. Except we'll going to try
+to accomplish this task in a little bit of a wrong way first. And what were going to do is, we're going to supply this bad-remove
+attribute on our shopping list directive. And we're going to pass the actual
+function directly as a reference to our directive. If we go to ab.gs, we'll see here
+that on our directive itself we're going to create a badRemove property,
+and we're going to use an equal sign. So it will be a bidirectional binding,
+and the function value of that remove that we're going to pass in is going
+to be equal to this badRemove property. In the actual service remove method,
+or controller I should say. In the actual controller remove method
+we're going to have one more thing. Let me actually close to see but what
+we're going to do is we're going to have one more side effect here along comment
+and we're going to create a property under this keyword which means since we're using
+control s syntax is gong to be attached to the controllers instance and
+it's going to be called lastRemoved. Basically whenever somebody
+passes as an itemIndex we're going to look that itemIndex
+up in our this.items array, and save the name of that item
+in the lastRemoved property. In the index.html we're going
+to place a real quick span here, and we'll say, Last or list.lastRemoved. So now we're going to output
+whatever it is that is last removed right inside of our controller. This list is the label for
+our shopping list controller. If we go to the shoppinglist.html which
+is the template for our directive, we're going to see here a button and
+the button says, list.badRemoved. And badRemoved is our function and we're able to obviously take a function
+reference which is what this is. Surrounded with parenths and
+execute it, passing it our dollar sign, did the index switches the index in the
+list that somebody's clicking to remove and the button name is
+going to be Bad Remove. Just to look back at index.html
+we have our badRemove Attribute map to list.remove items. So it's the removeItem function value that
+is being assigned to this badRemove and then that badRemoved gets called right
+here inside of our directive template. Okay, let's save that. And let's go to the browser and
+let's try to add item test 1. We'll just say test for
+now, we'll click that item, we'll see the Bad Remove button. Test 2 click add item button,
+test 3 and click the add item button. One more thing let's go take
+a look at when we go to the code is that I printed out this console.log. This is, and I'm printing out what
+the this variable is pointing to. Just as important, so
+we'll be able to look at the console and see when we attach
+the this.lastRemoved and this.title, where is this actually
+pointing to at the time that we call it? Let's go back to our browser and
+let's go ahead and actually open the console so
+we could see what's going on. Open the console here and
+let's go ahead and try to click bad remove item number one. When we click here we see that for
+some reason we don't have any kind of announcement
+here what the last removed item was. If we take a look at our console I
+think it's going to give us a clue. This is, and remember this right now
+is being called from the remove item method that is sitting on our controller
+that is the main controller and if we take a look this is
+ShoppingListDirectiveController. So it's not the shopping list controller, it's shopping list directed controller
+which is not what we want because. Because ShoppingListDirectiveController is
+the controller for our isolate scope and we wanted this to execute in
+the parent controller's scope. As you could see, all these things that we thought were
+being assigned on the parent controller scope are actually being assigned
+directly to our directives isolate scope. And that's why you see
+that the title still says list number 1 has 3 items in it,
+and so what happened to the title? Well, when we said this.title and updated
+of the title with two items, it when had and created that title, the title property
+on our ShoppingListDirectiveController. Meanwhile the actual
+shopping list controller doesn't know anything about this. Let's go back to the code editor and actually take a look as to why
+something like that is happening. I actually created this this.html and
+it's just referencing this.js so we will be able to see what's going on. And here's a quick example on
+the microcosm as to what's going on here in our controllers. Suppose we have this function
+called Person and it says, this.fullName is Yaakov,
+this.fav is Cookies. And we have one method on the subject,
+which is the function and now what it's doing is loading to the console and
+says, this.fullName likes this.fav. If we now go ahead and create this yaakov
+object with the called the new person, as we should, that this variable inside of this object
+will be pointing to the person object. And when we call yakov.describe, in other words this method, this will
+still be pointing to the Person object, and therefore, you'll be able
+to reference fullName and fave. So let's go ahead and
+actually comment this out, for a second. Let's go ahead and save that, and
+let's open this.html in the browser. And you'll see that the console says,
+Yaakov likes cookies, very true. Now if we go back, and go to this.js, what
+we're going to do now is we're going to pull out the method from
+this yaakov object. After all, yaakov.describe without
+the parenths is just a function value, so we could grab that value and
+stick it in a local variable. And then since that local variable
+is pointing to a function value, we can actually execute it just
+by putting parenths behind it. If we save that and go back to
+our browser, let's refresh that. You can see it already says
+that undefined likes undefined. How come this is going on? Well, the reason this is going on is if we
+actually put a console.log right inside of here, let's put a log statement here and
+say, what exactly is this variable? Let's go ahead and say, this is,
+what is the this variable? Let's go ahead and output this. You could see that the first time we go
+around, this variable is the person but the second time going around,
+this variable is actually the window. And the window doesn’t have
+a full name and a fav. The reason this is happening is because we
+took that method out of its context and its context became the window, because we were sitting after
+all in the global scope. There is actually a java script solution
+to that and it's called the call method. If you take the method that is
+out of context, in other words, the this very well is pointing to
+whatever the surrounding context is. You could actually give it context and
+basically it will get that this variable assigned to whatever object
+that you're passing it in the call method. So if we invoke describe with the call
+method and pass it to object yaakov then this variable will all of a sudden
+once again be pointing to yaakov. So if we save that and go back to
+our browser you'll see that even though the first time it says undefined
+undefined the next time this is is actually pointing back into Person and it
+actually will say, Yaakov likes cookies. And this is what's happening
+in our controller. If we go back, we could close this now, what's happening
+in our controllers is that when this call is being made right here, this call is
+being made just with a function reference. It's like a variable that was
+yanked out of its context and now sitting in a different context,
+in the case of the describe function in our this example, it was sitting
+in the context of the window object. Well, in the case of this badRemove
+example, it's sitting in the context of the directives controller, not of
+the parent controller as we want it. So the solution is, is to use the app
+reference and then pass a map of arguments that is mapped to how
+we code this method, to begin with. So let's go to app.gs and what we're going to do now is we're
+going to declare yet another attribute. And another attribute
+will be called onRemove. And onRemove is going to
+have an ampersand binding which means it's going to
+be a reference binding. Will go to index.html and
+we'll add one more button here or one more attribute and we'll call it
+on-remove and this time we'll call list.remove item and
+will pass it in index. Except as I told you as you remember this index is not something that the
+ShoppingListController will be passing. This index is just a key for
+our directive to be able to find and assign some value to it so all of
+this will get executed in the context of the ShoppingListController not of
+the ShoppingListDirectiveController. Let's go ahead and
+actually put this back there. It'll look a little bit better that way. We'll go back to our shoppingList.html,
+that is the template for our directive. Let's close the file browser so
+it'll be easier to see, and we'll actually uncomment
+this button right here. And if you take a look, it's list, which is the list of my
+ShoppingListDirectiveController. onRemove, that's the property we mapped
+on remove into the controller on our Isolate Scope, and then you could see
+we're passing it an object that is a map. It's mapping the index,
+if you take a look at the index.html, this is the index that we're mapping. So it's taking that index and it's saying it should be equal to at the
+time you call this, it should be equal to that'll assign index, which is the index
+through the loop at the moment. Now when we save it and go back to the
+browser, we'll close our this example and we'll close this as well. And here is our directive with Isolate
+Scope, let's go ahead and add test, well first of all it's not refreshing for
+some reason, let's refresh it, here we go. Okay, so let's add our test 1,
+add 1, so we have bad remove and with remove item will do test 2,
+add Item and test 3 and add that item. And let's go ahead try
+to caught Removed Item. Let's say Remove Test 2. Request Removed Test 2 you'll see that
+the last item remove showed up here which means that property did
+show up In the parent controller. And if we take a look,
+in our remove item method, we logged what the variable
+this pointed to. In this case, it's pointing to
+the ShoppingListController which is exactly what we wanted. We wanted to execute that method In
+the context of the ShoppingListController which is the parent of our directive. And if we take a look all the things
+that we need are here and we see are here and we see the last
+little property is here and the shopping list title also got updated
+to two and therefore it's right there. If we remove it again, this time we remove
+number 1, so it's number 1 and so on. So this is working. So once again, what allowed us
+to be able to call this method in the context of the parent of
+this directive is the reference that we declared onRemove property,
+which is the ampersand that is giving us a reference to the function
+such that it's going to get executed in its parent environment evaluating
+all the properties like they should be. Okay, so let's summarize. The & binding allows us
+to execute an expression, such as a function value in
+the context of the parent scope. The way this is done is the following. The parent template must declare an
+attribute providing the method reference for the directive to call on the parent,
+and an argument keys for directive to bind values to when it needs
+to pass the data from the isolate scope back to the parent scope. The directive on the other hand
+calls the referenced method and also provides an object map of
+argument key to value pairs. This allows the directive to pass data
+back to the parent from the isolate scope.

@@ -1,0 +1,89 @@
+[MUSIC] There are times when it makes sense that
+the directive should invoke a method on its parent passing it some data only
+our directive would know about. Like what item was clicked in the list based on our original data
+given to the directive. For example, say you have a directive
+like the one we've been working with, the shopping list directive,
+that's responsible for displaying the shopping list. It may also be responsible for providing
+a button to remove an item from the list. However, it's the parent
+that's in charge of that data. The shopping list directive
+only displays the list. It has no idea, and
+shouldn't have any idea what should happen if someone wants
+to remove something from the list. Maybe some side effect needs to occur that has nothing to do with
+the responsibilities of our directive. The actual data manipulation
+like removal of an item needs to happen in the parent controller. In other words we need to set
+up a link from the directive to some method on the parent and then provide some data from the directive
+to that parents method for execution. However, we must be careful
+the parent has to execute that method in the parents context not
+in a directives context. That means,
+that when we call the parents method, and that method tries to use
+the dollar sign scope, it should refer to the parents scope
+not the directives isolate scope. This is accomplished with the reference
+binding, signified by the ampersand sign and some additional syntax that
+we'll see in the following steps. Obviously, we need to start with
+the requirement to call some parent controllers method. In this example, we're calling the method method which is
+the function that takes one argument. Note that we're using the this keyboard
+to define this method as a property over the controllers instance and
+that it is obviously very important that the this keyword stays referring to
+the instance of this controller. The argument declared here as arg1
+needs to come from the child directive. In the DDO,
+the Directive of Definition Object we declare a myMethod isolates scope
+property, which will serve as the property name we can reference the pass in method
+that exist on a parent controller scope. The reference with the ampersand sign
+will be followed by the name method, which is what we'll need to use
+in the parents HTML template, to pass in the reference
+to the parent method. Again, not much new here. The property name is used by the directive
+and the value of that property is used by the parent controller that references
+that value inside of its HTML. In step three we'll use a directive
+in the parent controller's template specifying the method attribute
+we declare it in the ddo and providing a reference to
+the controller's method as a value. Note here that myArg argument
+passed in here is simply a key which will later use to assign something
+from the directives isolate scope. We are not actually passing
+in the myArg argument from the controller to
+the my-directive Is it appears here. I know, it's a bit of a weird syntax
+because that's exactly how it appears. But remember with the ampersand sign
+reference binding the argument name in the call is simply a key will later
+use to map a value from the directive to that key with which angular will
+then call our controllers method. This can get a little bit confusing so
+don't get frustrated too quickly and wait for the coding example to
+put it all together in your mind. We still have one more step. Finally, in the directive's template, we
+trigger the map controller's method call by using our directive's
+controller as a label dirCtrl and invoking the method, myMethod as
+declared on the isolate scope binding. But notice what we're
+passing into the method. Not your regular argument, instead we're
+using the name of the argument that parent made the call with and mapping
+some value to it from our directive. So what we're passing into the method is a
+map object, not a single argument, myArg. The keys in that map object have to
+correspond to the argument name or names the parent controller
+declared the call with. So just to be clear, the name of
+the argument we used in the controller's template.html shown at the top is
+the key we use to map a directive internal value to by passing it an object
+with the argument name as that key. Okay, so
+let's try to visually put it all together to make things as clear as possible
+before we jump into the code editor. You have some functionality in your
+controller that you want executed when something happens inside of your directive
+housed in your controller's template. After all the controller has
+the handle on the data and you want your directive to only
+display that data not manipulate it. The controller has a method called
+method that takes one argument, we need to pass our method into
+the directive as a reference so that the directive can delegate the call
+to this method whenever something happens inside of the directive,
+then only the directive will know about. For example, whenever somebody clicks on a
+button inside of the directive's template. The way we pass a reference to
+the controller's method is by using an attribute, that matches what
+we've declared to be in the DDO. In this case the attribute name is method. That means that our directive's internal
+way of referring to that method is now myMethod. If we wanted to call the controller's
+function passed into our directive the name we have to use is myMethod. And since we're using controller
+s syntax inside of our directive, myMethod will be bound to the directive's
+controller instance not directly to the directive's scope. So when we call myMethod inside of our
+directive template it's going to be prefixed with the label that our
+directives controller is declared with. Now inside of our directive, when a user clicks on a button we can
+invoke myMethod which is just an alias to the outer controller's method that
+was passed into our directive. The last task is to make sure to
+properly pass the data from our directive to the outer
+controller's method. We do that by passing in
+an object whose property names must match the argument names of the
+method call in the controller's template. Shoo, that was a lot. My suggestion to you is to go
+through this lecture again once you've seen an example in part two. And then all these connections
+between different parts should feel a lot more comfortable. Okay, let's jump into the code editor and
+see these concepts in action.

@@ -1,0 +1,14 @@
+<h3> {{ listDirective.titleDirective }} </h3>
+<ol>
+  <li ng-repeat = "item in listDirective.listDirective.getItems">
+    {{ item.quantity }} of {{ item.name }}
+    <!-- <button type="button" ng-click = "listDirective.listDirective.RemoveItem($index);">Remove Item</button> -->
+    <button type="button" ng-click = "listDirective.badRemove($index);">Bad Remove Item</button>
+    <!-- map index by $index  -->
+    <button type="button" ng-click = "listDirective.onRemove({index : $index})">On Remove Item</button>
+  </li>
+</ol>
+
+<div class="error" ng-if = "listDirective.FindCookies()">
+  Warning cookies
+</div>
